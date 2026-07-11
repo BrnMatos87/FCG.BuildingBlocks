@@ -1,32 +1,62 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-  <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
 
-  <ImplicitUsings>enable</ImplicitUsings>
-  <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
 
-  <PackageId>FCG.BuildingBlocks</PackageId>
+    <!-- Informações do pacote -->
+    <PackageId>FCG.BuildingBlocks</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Bruno Matos</Authors>
+    <Company>Bruno Matos</Company>
 
-  <Version>1.0.0</Version>
+    <Title>FCG.BuildingBlocks</Title>
 
-  <Authors>Bruno Matos</Authors>
+    <Description>
+      Biblioteca compartilhada contendo entidades base, enums e eventos de integração utilizados pelos microsserviços da solução FCG (FIAP Cloud Games).
+    </Description>
 
-  <Company>FCG Cloud Games</Company>
+    <PackageTags>
+      dotnet;net8;microservices;buildingblocks;ddd;cqrs;cleanarchitecture;fiap
+    </PackageTags>
 
-  <Description>
-    Shared Building Blocks used by FCG microservices.
-  </Description>
+    <!-- Links -->
+    <RepositoryUrl>https://github.com/brnmatos/FCG.BuildingBlocks</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
 
-  <PackageTags>
-    dotnet;microservices;buildingblocks
-  </PackageTags>
+    <PackageProjectUrl>https://github.com/brnmatos/FCG.BuildingBlocks</PackageProjectUrl>
 
-  <RepositoryUrl>
-    https://github.com/brnmatos/FCG.BuildingBlocks
-  </RepositoryUrl>
+    <!-- Documentação -->
+    <PackageReadmeFile>README.md</PackageReadmeFile>
 
-  <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
-</PropertyGroup>
+    <!-- Licença -->
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+
+    <!-- Gerar pacote automaticamente -->
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <!-- Símbolos -->
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+
+    <!-- Informações adicionais -->
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+
+    <Copyright>
+      Copyright © 2026 Bruno Matos
+    </Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="README.md"
+          Pack="true"
+          PackagePath="\" />
+
+    <None Include="LICENSE"
+          Pack="true"
+          PackagePath="\" />
+  </ItemGroup>
 
 </Project>
