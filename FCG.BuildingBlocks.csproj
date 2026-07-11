@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+  <TargetFramework>net8.0</TargetFramework>
+
+  <ImplicitUsings>enable</ImplicitUsings>
+  <Nullable>enable</Nullable>
+
+  <PackageId>FCG.BuildingBlocks</PackageId>
+
+  <Version>1.0.0</Version>
+
+  <Authors>Bruno Matos</Authors>
+
+  <Company>FCG Cloud Games</Company>
+
+  <Description>
+    Shared Building Blocks used by FCG microservices.
+  </Description>
+
+  <PackageTags>
+    dotnet;microservices;buildingblocks
+  </PackageTags>
+
+  <RepositoryUrl>
+    https://github.com/brnmatos/FCG.BuildingBlocks
+  </RepositoryUrl>
+
+  <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+</PropertyGroup>
+
+</Project>
