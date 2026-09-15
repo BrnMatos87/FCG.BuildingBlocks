@@ -1,125 +1,47 @@
 # FCG.BuildingBlocks
 
-Biblioteca compartilhada utilizada pelos microsserviços da solução **FIAP Cloud Games (FCG)**.
+Biblioteca .NET 8 compartilhada da solução FIAP Cloud Games. O pacote concentra somente contratos e tipos realmente comuns, sem dependência de banco de dados, mensageria, HTTP ou infraestrutura específica.
 
-Este pacote concentra componentes reutilizáveis entre os microsserviços, promovendo padronização, reutilização de código e redução de dependências duplicadas.
+## Componentes
 
-O pacote está publicado no **NuGet.org** e pode ser consumido por qualquer aplicação .NET.
+- `EntityBase`: base para entidades de domínio.
+- `StatusType` e `PaymentStatus`: enums compartilhados.
+- `UserCreatedEvent`: contrato com os dados de um usuário criado.
+- `OrderPlacedEvent`: contrato de pedido criado.
+- `PaymentProcessedEvent`: contrato com o resultado de um pagamento.
 
----
+Os contratos são independentes do transporte. Na arquitetura atual:
 
-# Objetivo
+| Contrato | Produtor | Destino | Transporte |
+|---|---|---|---|
+| `UserCreatedEvent` | FCG.Users | FCG.Notifications | HTTP POST |
+| `OrderPlacedEvent` | FCG.Catalog | FCG.Payments | RabbitMQ |
+| `PaymentProcessedEvent` | FCG.Payments | FCG.Catalog | RabbitMQ |
+| `PaymentProcessedEvent` | FCG.Payments | FCG.Notifications | HTTP POST |
 
-O objetivo desta biblioteca é centralizar todos os componentes compartilhados da solução, permitindo que os microsserviços utilizem uma única implementação para objetos comuns.
+O reaproveitamento do mesmo DTO no HTTP não transforma a chamada em consumo de mensagem. Notifications não possui consumer nem trigger RabbitMQ.
 
-Entre os principais benefícios estão:
+## Estrutura
 
-- Reutilização de código
-- Padronização entre microsserviços
-- Redução de acoplamento
-- Facilidade de manutenção
-- Versionamento independente dos serviços
-
----
-
-# Tecnologias
-
-- .NET 8
-- C#
-- NuGet
-- Domain Driven Design (DDD)
-- Clean Architecture
-
----
-
-# Estrutura do Projeto
-
-```
-FCG.BuildingBlocks
-│
-├── Domain
-│   └── EntityBase.cs
-│
-├── Enums
-│   ├── StatusType.cs
-│   └── PaymentStatus.cs
-│
-├── Events
-│   ├── UserCreatedEvent.cs
-│   ├── OrderPlacedEvent.cs
-│   └── PaymentProcessedEvent.cs
-│
-├── README.md
-├── LICENSE
-└── FCG.BuildingBlocks.csproj
+```text
+FCG.BuildingBlocks/
+|-- Domain/
+|   `-- EntityBase.cs
+|-- Enums/
+|   |-- StatusType.cs
+|   `-- PaymentStatus.cs
+|-- Events/
+|   |-- UserCreatedEvent.cs
+|   |-- OrderPlacedEvent.cs
+|   `-- PaymentProcessedEvent.cs
+`-- FCG.BuildingBlocks.csproj
 ```
 
----
-
-# Componentes Disponíveis
-
-Atualmente o pacote disponibiliza:
-
-## Entidades Base
-
-Componentes utilizados como base para entidades de domínio.
-
-Exemplo:
-
-- EntityBase
-
----
-
-## Enums Compartilhados
-
-Enums utilizados por diferentes microsserviços.
-
-Exemplos:
-
-- StatusType
-- PaymentStatus
-
----
-
-## Integration Events
-
-Eventos compartilhados para comunicação assíncrona entre microsserviços.
-
-Eventos disponíveis:
-
-- UserCreatedEvent
-- OrderPlacedEvent
-- PaymentProcessedEvent
-
----
-
-# Instalação
-
-Instale utilizando o .NET CLI:
-
-```bash
-dotnet add package FCG.BuildingBlocks
-```
-
-Ou utilizando o Package Manager:
-
-```powershell
-Install-Package FCG.BuildingBlocks
-```
-
-Ou adicionando manualmente ao projeto:
+## Uso
 
 ```xml
 <PackageReference Include="FCG.BuildingBlocks" Version="1.0.1" />
 ```
-
----
-
-# Utilização
-
-Após instalar o pacote, basta importar o namespace desejado.
-
-Exemplo:
 
 ```csharp
 using FCG.BuildingBlocks.Domain;
@@ -127,128 +49,33 @@ using FCG.BuildingBlocks.Enums;
 using FCG.BuildingBlocks.Events;
 ```
 
----
+## Build, testes e pacote
 
-# Versionamento
-
-Este pacote segue versionamento semântico.
-
-Exemplo:
-
-```
-1.0.0
-
-Correções
-↓
-
-1.0.1
-
-Novas funcionalidades compatíveis
-↓
-
-1.1.0
-
-Mudanças incompatíveis
-↓
-
-2.0.0
-```
-
-Sempre que novas funcionalidades forem adicionadas ou corrigidas, uma nova versão será publicada no NuGet.org.
-
----
-
-# Publicação
-
-O pacote é publicado no NuGet.org.
-
-Página oficial:
-
-https://www.nuget.org/packages/FCG.BuildingBlocks
-
-Publicação:
-
-```bash
+```powershell
+dotnet restore
+dotnet build
+dotnet test
 dotnet pack -c Release
-
-dotnet nuget push .\bin\Release\FCG.BuildingBlocks.<versão>.nupkg \
-    --source https://api.nuget.org/v3/index.json \
-    --api-key SUA_API_KEY
 ```
 
----
+Para publicar uma nova versão, incremente o pacote conforme versionamento semântico e use uma API key fora do repositório:
 
-# Consumo pelos Microsserviços
-
-Atualmente este pacote é utilizado pelos seguintes serviços da solução:
-
-- FCG.Users
-- FCG.Catalog
-- FCG.Payments
-- FCG.GameLibrary
-- FCG.Notifications
-
-Todos os microsserviços utilizam o mesmo pacote compartilhado para manter consistência entre entidades, eventos e enums.
-
----
-
-# Arquitetura
-
-A solução utiliza uma arquitetura baseada em microsserviços.
-
-```
-                FCG.BuildingBlocks
-                        │
-        ┌───────────────┼────────────────┐
-        │               │                │
-        ▼               ▼                ▼
-
-   FCG.Users      FCG.Catalog     FCG.Payments
-        │               │                │
-        └───────────────┼────────────────┘
-                        │
-                        ▼
-
-               FCG.GameLibrary
-
-                        │
-                        ▼
-
-             FCG.Notifications
+```powershell
+dotnet nuget push .\bin\Release\FCG.BuildingBlocks.<versao>.nupkg `
+  --source https://api.nuget.org/v3/index.json `
+  --api-key <NUGET_API_KEY>
 ```
 
-Todos os microsserviços compartilham apenas este pacote comum, permanecendo independentes entre si.
+## Limites da biblioteca
 
----
+Não devem ser adicionados ao BuildingBlocks:
 
-# Boas Práticas
+- Entity Framework ou drivers de persistência;
+- RabbitMQ ou MassTransit;
+- clientes HTTP;
+- Controllers ou lógica específica de um microsserviço;
+- secrets, connection strings ou configurações de implantação.
 
-Esta biblioteca possui apenas componentes compartilhados.
+## Fase 3
 
-Não devem ser adicionados:
-
-- Entity Framework
-- SQL Server
-- RabbitMQ
-- ASP.NET Core
-- Controllers
-- Repositórios
-- Serviços específicos de um domínio
-
-O objetivo é manter o pacote leve, reutilizável e independente.
-
----
-
-# Licença
-
-Este projeto utiliza a licença MIT.
-
-Consulte o arquivo LICENSE para mais informações.
-
----
-
-# Autor
-
-Bruno Matos
-
-Pós-graduação em Arquitetura de Software - FIAP
+Os requisitos de Kong, Kubernetes, Prometheus, Grafana, MongoDB, Redis e orquestração pertencem aos serviços e ao `FCG.Orchestration`. Esta biblioteca fornece somente os contratos necessários para manter compatibilidade entre eles.
