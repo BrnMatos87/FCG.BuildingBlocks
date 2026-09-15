@@ -1,6 +1,4 @@
-﻿using FCG.BuildingBlocks.Enums;
-
-namespace FCG.BuildingBlocks.Events;
+﻿namespace FCG.BuildingBlocks.Events;
 
 public class OrderPlacedEvent
 {
